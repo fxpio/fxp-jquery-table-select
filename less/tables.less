@@ -1,0 +1,28 @@
+//
+// Table
+// --------------------------------------------------
+
+.table {
+    > thead,
+    > tfoot {
+        > tr {
+            > th {
+                color: @table-header-color;
+
+                &.right {
+                    text-align: right;
+                }
+            }
+        }
+    }
+
+    > tbody {
+        > tr {
+            > td {
+                &.right {
+                    text-align: right;
+                }
+            }
+        }
+    }
+}
