@@ -8,8 +8,17 @@
         > tr {
             > th {
                 color: @table-header-color;
+                min-width: 90px;
 
-                &.right {
+                &.table-left {
+                    text-align: left;
+                }
+
+                &.table-center {
+                    text-align: center;
+                }
+
+                &.table-right {
                     text-align: right;
                 }
             }
@@ -19,10 +28,23 @@
     > tbody {
         > tr {
             > td {
-                &.right {
+                &.table-left {
+                    text-align: left;
+                }
+
+                &.table-center {
+                    text-align: center;
+                }
+
+                &.table-right {
                     text-align: right;
                 }
             }
         }
     }
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
 }
