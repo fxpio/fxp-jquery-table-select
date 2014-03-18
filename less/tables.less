@@ -48,6 +48,26 @@
             }
         }
     }
+
+    > thead > tr > th,
+    > tbody > tr > td,
+    > tfoot > tr > td {
+        > .checkbox,
+        > .radio {
+            margin-top: auto;
+            margin-bottom: auto;
+            display: inline-block;
+        }
+
+        > .checkbox label.form-control-fa > input[type="checkbox"],
+        > .radio label.form-control-fa > input[type="radio"] {
+            + .form-control-fa-style {
+                width: 18px;
+                height: 18px;
+                font-size: 11px;
+            }
+        }
+    }
 }
 
 .table-responsive {
