@@ -25,6 +25,7 @@
         this.guid     = jQuery.guid;
         this.options  = $.extend({}, TableSelect.DEFAULTS, options);
         this.$element = $(element);
+        this.$count   = $(this.options.countSelector, this.$element);
         this.items    = new Array();
         this.multiple = false;
         this.maxSelection = this.options.maxSelection;
@@ -39,6 +40,7 @@
             .on('change.st.tableselect', this.allSelector, $.proxy(onAllChanged, this))
             .on('change.st.tableselect', this.rowSelector, $.proxy(onRowChanged, this))
             .on('table-pager-loaded.st.tableselect', $.proxy(onPagerLoaded, this))
+            .on('click.st.tableselect', this.options.clearSelector, $.proxy(onClearAllSelection, this))
         ;
 
         this.refresh();
@@ -53,6 +55,9 @@
         classSelectable: 'table-selector',
         allSelector:     'th[data-class=%CLASS_NAME%] input',
         rowSelector:     'td.%CLASS_NAME% input',
+        countSelector:   '> thead .table-select-count',
+        clearSelector:   '> thead .table-select-clear',
+        textSelection:   '<i class="fa fa-check-circle"></i>',
         maxSelection:    0
     };
 
@@ -144,7 +149,11 @@
         var ids = new Array();
 
         for (var i = 0; i < $items.size(); i++) {
-            ids.push($items.eq(i).attr('data-row-id'));
+            var id = $items.eq(i).attr('data-row-id');
+
+            if (undefined != id) {
+                ids.push(id);
+            }
         }
 
         this.add(ids);
@@ -160,7 +169,11 @@
         var ids = new Array();
 
         for (var i = 0; i < $items.size(); i++) {
-            ids.push($items.eq(i).attr('data-row-id'));
+            var id = $items.eq(i).attr('data-row-id');
+
+            if (undefined != id) {
+                ids.push(id);
+            }
         }
 
         this.remove(ids);
@@ -230,14 +243,24 @@
 
         for (var i = 0; i < $items.size(); i++) {
             var id = $items.eq(i).attr('data-row-id');
-            var $checkbox = $items.eq(i).find('> ' + this.rowSelector);
-            var cSelected = this.has(id);
 
-            if (allSelected && !cSelected) {
-                allSelected = false;
+            if (undefined != id) {
+                var $checkbox = $items.eq(i).find('> ' + this.rowSelector);
+                var cSelected = this.has(id);
+
+                if (allSelected && !cSelected) {
+                    allSelected = false;
+                }
+
+                $checkbox.prop('checked', cSelected);
             }
+        }
 
-            $checkbox.prop('checked', cSelected);
+        this.$count.empty();
+
+        if (this.count() >= 1) {
+            this.$count.text(this.count() + ' ');
+            this.$count.append(this.options.textSelection);
         }
 
         this.$element.find(this.allSelector).prop('checked', allSelected);
@@ -256,6 +279,7 @@
             .off('change.st.tableselect', allSelector, $.proxy(onAllChanged, this))
             .off('change.st.tableselect', rowSelector, $.proxy(onRowChanged, this))
             .off('table-pager-loaded.st.tableselect', $.proxy(onPagerLoaded, this))
+            .off('click.st.tableselect', this.options.clearSelector, $.proxy(onClearAllSelection, this))
             .$element.removeData('st.tableselect')
         ;
     };
@@ -275,6 +299,18 @@
         } else {
             this.clean();
         }
+    }
+
+    /**
+     * Action on clear all selection.
+     *
+     * @param jQuery.Event event
+     *
+     * @this
+     * @private
+     */
+    function onClearAllSelection (event) {
+        this.clear();
     }
 
     /**

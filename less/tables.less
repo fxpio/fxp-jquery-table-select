@@ -70,6 +70,28 @@
             }
         }
     }
+
+    > thead {
+        .table-select-count,
+        .table-select-clear {
+            padding: 4px 4px 3px 4px;
+            line-height: floor((@font-size-base * @line-height-base));
+        }
+
+        .table-select-count {
+            &.disabled {
+                opacity: 1;
+            }
+
+            &:empty {
+                display: none;
+
+                + .table-select-clear {
+                    display: none;
+                }
+            }
+        }
+    }
 }
 
 .table-responsive {
