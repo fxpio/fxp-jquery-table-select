@@ -29,8 +29,8 @@
         this.items    = new Array();
         this.multiple = false;
         this.maxSelection = this.options.maxSelection;
-        this.allSelector = this.options.allSelector.replace('%CLASS_NAME%', this.options.classSelectable);
-        this.rowSelector = this.options.rowSelector.replace('%CLASS_NAME%', this.options.classSelectable);
+        this.allSelector = this.options.allSelector.replace('%COL_NAME%', this.options.colSelectable);
+        this.rowSelector = this.options.rowSelector.replace('%COL_NAME%', this.options.colSelectable);
 
         if (this.$element.find(this.allSelector).size() > 0) {
             this.multiple = true;
@@ -52,13 +52,13 @@
      * @type Array
      */
     TableSelect.DEFAULTS = {
-        classSelectable: 'table-selector',
-        allSelector:     'th[data-class=%CLASS_NAME%] input',
-        rowSelector:     'td.%CLASS_NAME% input',
-        countSelector:   '> thead .table-select-count',
-        clearSelector:   '> thead .table-select-clear',
-        textSelection:   '<i class="fa fa-check-circle"></i>',
-        maxSelection:    0
+        colSelectable: 'table-selector',
+        allSelector:   'th[data-col-name=%COL_NAME%] input',
+        rowSelector:   'td[data-col-name=%COL_NAME%] input',
+        countSelector: '> thead .table-select-count',
+        clearSelector: '> thead .table-select-clear',
+        textSelection: '<i class="fa fa-check-circle"></i>',
+        maxSelection:  0
     };
 
     /**
