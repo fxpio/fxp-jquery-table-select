@@ -39,7 +39,7 @@
         this.$element
             .on('change.st.tableselect', this.allSelector, $.proxy(onAllChanged, this))
             .on('change.st.tableselect', this.rowSelector, $.proxy(onRowChanged, this))
-            .on('table-pager-loaded.st.tableselect', $.proxy(onPagerLoaded, this))
+            .on('table-pager-refreshed.st.tableselect', $.proxy(onPagerRefreshed, this))
             .on('click.st.tableselect', this.options.clearSelector, $.proxy(onClearAllSelection, this))
         ;
 
@@ -278,7 +278,7 @@
         this.$element
             .off('change.st.tableselect', allSelector, $.proxy(onAllChanged, this))
             .off('change.st.tableselect', rowSelector, $.proxy(onRowChanged, this))
-            .off('table-pager-loaded.st.tableselect', $.proxy(onPagerLoaded, this))
+            .off('table-pager-refreshed.st.tableselect', $.proxy(onPagerRefreshed, this))
             .off('click.st.tableselect', this.options.clearSelector, $.proxy(onClearAllSelection, this))
             .$element.removeData('st.tableselect')
         ;
@@ -341,7 +341,7 @@
      * @this
      * @private
      */
-    function onPagerLoaded (event) {
+    function onPagerRefreshed (event) {
         this.refresh();
     }
 
