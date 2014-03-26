@@ -22,15 +22,16 @@
      * @this
      */
     var TableSelect = function (element, options) {
-        this.guid     = jQuery.guid;
-        this.options  = $.extend({}, TableSelect.DEFAULTS, options);
-        this.$element = $(element);
-        this.$count   = $(this.options.countSelector, this.$element);
-        this.items    = new Array();
-        this.multiple = false;
+        this.guid         = jQuery.guid;
+        this.options      = $.extend({}, TableSelect.DEFAULTS, options);
+        this.$element     = $(element);
+        this.$wrapper     = $('[data-table-id=' + this.$element.attr('id') + ']');
+        this.$count       = $(this.options.countSelector, this.$wrapper);
+        this.items        = new Array();
+        this.multiple     = false;
         this.maxSelection = this.options.maxSelection;
-        this.allSelector = this.options.allSelector.replace('%COL_NAME%', this.options.colSelectable);
-        this.rowSelector = this.options.rowSelector.replace('%COL_NAME%', this.options.colSelectable);
+        this.allSelector  = this.options.allSelector.replace('%COL_NAME%', this.options.colSelectable);
+        this.rowSelector  = this.options.rowSelector.replace('%COL_NAME%', this.options.colSelectable);
 
         if (this.$element.find(this.allSelector).size() > 0) {
             this.multiple = true;
@@ -40,6 +41,9 @@
             .on('change.st.tableselect', this.allSelector, $.proxy(onAllChanged, this))
             .on('change.st.tableselect', this.rowSelector, $.proxy(onRowChanged, this))
             .on('table-pager-refreshed.st.tableselect', $.proxy(onPagerRefreshed, this))
+        ;
+
+        this.$wrapper
             .on('click.st.tableselect', this.options.clearSelector, $.proxy(onClearAllSelection, this))
         ;
 
@@ -55,8 +59,8 @@
         colSelectable: 'table-selector',
         allSelector:   'th[data-col-name=%COL_NAME%] input',
         rowSelector:   'td[data-col-name=%COL_NAME%] input',
-        countSelector: '> thead .table-select-count',
-        clearSelector: '> thead .table-select-clear',
+        countSelector: '.table-select-count',
+        clearSelector: '.table-select-clear',
         textSelection: '<i class="fa fa-check-circle"></i>',
         maxSelection:  0
     };
@@ -275,11 +279,13 @@
     TableSelect.prototype.destroy = function () {
         this.clear();
         this.refresh();
+        this.$wrapper
+            .off('click.st.tableselect', this.options.clearSelector, $.proxy(onClearAllSelection, this))
+        ;
         this.$element
             .off('change.st.tableselect', allSelector, $.proxy(onAllChanged, this))
             .off('change.st.tableselect', rowSelector, $.proxy(onRowChanged, this))
             .off('table-pager-refreshed.st.tableselect', $.proxy(onPagerRefreshed, this))
-            .off('click.st.tableselect', this.options.clearSelector, $.proxy(onClearAllSelection, this))
             .$element.removeData('st.tableselect')
         ;
     };
