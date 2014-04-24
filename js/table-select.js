@@ -7,8 +7,82 @@
  * file that was distributed with this source code.
  */
 
-+function ($) {
+/*global jQuery*/
+/*global window*/
+/*global TableSelect*/
+
+/**
+ * @param {jQuery} $
+ *
+ * @typedef {TableSelect} TableSelect
+ */
+(function ($) {
     'use strict';
+
+    /**
+     * Action on all selector changed.
+     *
+     * @param {jQuery.Event|Event} event
+     *
+     * @typedef {TableSelect} Event.data The table select instance
+     *
+     * @private
+     */
+    function onAllChanged(event) {
+        if ($(event.target).is(':checked')) {
+            event.data.all();
+
+        } else {
+            event.data.clean();
+        }
+    }
+
+    /**
+     * Action on row selector changed.
+     *
+     * @param {jQuery.Event|Event} event
+     *
+     * @typedef {TableSelect} Event.data The table select instance
+     *
+     * @private
+     */
+    function onRowChanged(event) {
+        var $item = $(event.target),
+            id = $item.parents('tr:first').attr('data-row-id');
+
+        if ($item.is(':checked')) {
+            event.data.add(id);
+
+        } else {
+            event.data.remove(id);
+        }
+    }
+
+    /**
+     * Action on clear all selection.
+     *
+     * @param {jQuery.Event|Event} event
+     *
+     * @typedef {TableSelect} Event.data The table select instance
+     *
+     * @private
+     */
+    function onClearAllSelection(event) {
+        event.data.clear();
+    }
+
+    /**
+     * Action on pager loaded.
+     *
+     * @param {jQuery.Event|Event} event
+     *
+     * @typedef {TableSelect} Event.data The table select instance
+     *
+     * @private
+     */
+    function onPagerRefreshed(event) {
+        event.data.refresh();
+    }
 
     // TABLE SELECT CLASS DEFINITION
     // =============================
@@ -16,10 +90,10 @@
     /**
      * @constructor
      *
-     * @param htmlString|Element|Array|jQuery element
-     * @param Array                           options
+     * @param {string|elements|object|jQuery} element
+     * @param {object}                        options
      *
-     * @this
+     * @this TableSelect
      */
     var TableSelect = function (element, options) {
         this.guid         = jQuery.guid;
@@ -27,33 +101,32 @@
         this.$element     = $(element);
         this.$wrapper     = $('[data-table-id=' + this.$element.attr('id') + ']');
         this.$count       = $(this.options.countSelector, this.$wrapper);
-        this.items        = new Array();
+        this.items        = [];
         this.multiple     = false;
-        this.maxSelection = this.options.maxSelection;
         this.allSelector  = this.options.allSelector.replace('%COL_NAME%', this.options.colSelectable);
         this.rowSelector  = this.options.rowSelector.replace('%COL_NAME%', this.options.colSelectable);
+        this.setMaxSelection(this.options.maxSelection);
 
         if (this.$element.find(this.allSelector).size() > 0) {
             this.multiple = true;
         }
 
         this.$element
-            .on('change.st.tableselect', this.allSelector, $.proxy(onAllChanged, this))
-            .on('change.st.tableselect', this.rowSelector, $.proxy(onRowChanged, this))
-            .on('table-pager-refreshed.st.tableselect', $.proxy(onPagerRefreshed, this))
-        ;
+            .on('change.st.tableselect', this.allSelector, this, onAllChanged)
+            .on('change.st.tableselect', this.rowSelector, this, onRowChanged)
+            .on('table-pager-refreshed.st.tableselect', null, this, onPagerRefreshed);
 
         this.$wrapper
-            .on('click.st.tableselect', this.options.clearSelector, $.proxy(onClearAllSelection, this))
-        ;
+            .on('click.st.tableselect', this.options.clearSelector, this, onClearAllSelection);
 
         this.refresh();
-    };
+    },
+        old;
 
     /**
      * Defaults options.
      *
-     * @type Array
+     * @type {object}
      */
     TableSelect.DEFAULTS = {
         colSelectable: 'table-selector',
@@ -68,11 +141,11 @@
     /**
      * Check if item is selected.
      *
-     * @param string item The item id
+     * @param {string} item The item id
      *
-     * @return Boolean
+     * @returns {boolean}
      *
-     * @this
+     * @this TableSelect
      */
     TableSelect.prototype.has = function (item) {
         return $.inArray(item, this.items) >= 0;
@@ -81,25 +154,29 @@
     /**
      * Adds item.
      *
-     * @param string|Array item The item id or the list of item id
+     * @param {string|Array} item The item id or the list of item id
      *
-     * @this
+     * @this TableSelect
      */
     TableSelect.prototype.add = function (item) {
+        var id,
+            event,
+            i;
+
         if (typeof item === 'string') {
-            item = new Array(item);
+            item = [item];
         }
 
-        for (var index in item) {
-            var id = isNaN(item[index]) ? item[index] : item[index];
+        for (i = 0; i < item.length; i += 1) {
+            id = item[i];
 
             if (!this.multiple) {
-                this.items = new Array(id);
+                this.items = [id];
                 break;
             }
 
-            if (this.maxSelection > 0 && this.count() >= this.maxSelection) {
-                var event = $.Event('table-select-max-selection', {'tableSelect': this});
+            if (this.getMaxSelection() > 0 && this.count() >= this.maxSelection) {
+                event = $.Event('table-select-max-selection', {'tableSelect': this});
                 this.$element.trigger(event);
                 break;
             }
@@ -109,31 +186,38 @@
             }
         }
 
-        this.items.sort(function(a,b){return a - b});
+        this.items.sort(function (a, b) {
+            return a - b;
+        });
+
         this.refresh();
     };
 
     /**
      * Removes item.
      *
-     * @param string|Array item The item id or the list of item id
+     * @param {string|Array} item The item id or the list of item id
      *
-     * @this
+     * @this TableSelect
      */
     TableSelect.prototype.remove = function (item) {
+        var id,
+            pos,
+            i;
+
         if (typeof item === 'string') {
-            item = new Array(item);
+            item = [item];
         }
 
-        for (var index in item) {
-            var id = isNaN(item[index]) ? item[index] : item[index];
+        for (i = 0; i < item.length; i += 1) {
+            id = item[i];
 
             if (!this.multiple) {
-                this.items = new Array();
+                this.items = [];
                 break;
             }
 
-            var pos = $.inArray(id, this.items);
+            pos = $.inArray(id, this.items);
 
             if (pos > -1) {
                 this.items.splice(pos, 1);
@@ -146,16 +230,18 @@
     /**
      * Adds all item ids in DOM table.
      *
-     * @this
+     * @this TableSelect
      */
     TableSelect.prototype.all = function () {
-        var $items = this.$element.find('> tbody > tr');
-        var ids = new Array();
+        var $items = this.$element.find('> tbody > tr'),
+            ids = [],
+            id,
+            i;
 
-        for (var i = 0; i < $items.size(); i++) {
-            var id = $items.eq(i).attr('data-row-id');
+        for (i = 0; i < $items.size(); i += 1) {
+            id = $items.eq(i).attr('data-row-id');
 
-            if (undefined != id) {
+            if (undefined !== id) {
                 ids.push(id);
             }
         }
@@ -166,16 +252,18 @@
     /**
      * Removes all item ids in DOM table.
      *
-     * @this
+     * @this TableSelect
      */
     TableSelect.prototype.clean = function () {
-        var $items = this.$element.find('> tbody > tr');
-        var ids = new Array();
+        var $items = this.$element.find('> tbody > tr'),
+            ids = [],
+            id,
+            i;
 
-        for (var i = 0; i < $items.size(); i++) {
-            var id = $items.eq(i).attr('data-row-id');
+        for (i = 0; i < $items.size(); i += 1) {
+            id = $items.eq(i).attr('data-row-id');
 
-            if (undefined != id) {
+            if (undefined !== id) {
                 ids.push(id);
             }
         }
@@ -186,17 +274,19 @@
     /**
      * Removes all items.
      *
-     * @this
+     * @this TableSelect
      */
     TableSelect.prototype.clear = function () {
-        this.items = new Array();
+        this.items = [];
         this.refresh();
     };
 
     /**
      * Get all item ids.
      *
-     * @this
+     * @returns Array
+     *
+     * @this TableSelect
      */
     TableSelect.prototype.getItems = function () {
         return this.items;
@@ -205,52 +295,56 @@
     /**
      * Counts items.
      *
-     * @return Integer
+     * @returns {number}
      *
-     * @this
+     * @this TableSelect
      */
     TableSelect.prototype.count = function () {
-        return this.items.length;
+        return this.getItems().length;
     };
 
     /**
      * Get max selection.
      *
-     * @return Number
+     * @returns {number}
      * 
-     * @this
+     * @this TableSelect
      */
-    TableSelect.prototype.getMaxSelection= function () {
+    TableSelect.prototype.getMaxSelection = function () {
         return this.maxSelection;
     };
 
     /**
      * Set max selection.
      *
-     * @param Number max
+     * @param {number} max
      *
-     * @this
+     * @this TableSelect
      */
-    TableSelect.prototype.setMaxSelection= function (max) {
+    TableSelect.prototype.setMaxSelection = function (max) {
         this.maxSelection = max;
     };
 
     /**
      * Refresh DOM.
      *
-     * @this
+     * @this TableSelect
      */
     TableSelect.prototype.refresh = function () {
-        var event = $.Event('table-select-refreshed', {'tableSelect': this});
-        var $items = this.$element.find('> tbody > tr');
-        var allSelected = true;
+        var event = $.Event('table-select-refreshed', {'tableSelect': this}),
+            $items = this.$element.find('> tbody > tr'),
+            allSelected = true,
+            id,
+            $checkbox,
+            cSelected,
+            i;
 
-        for (var i = 0; i < $items.size(); i++) {
-            var id = $items.eq(i).attr('data-row-id');
+        for (i = 0; i < $items.size(); i += 1) {
+            id = $items.eq(i).attr('data-row-id');
 
-            if (undefined != id) {
-                var $checkbox = $items.eq(i).find('> ' + this.rowSelector);
-                var cSelected = this.has(id);
+            if (undefined !== id) {
+                $checkbox = $items.eq(i).find('> ' + this.rowSelector);
+                cSelected = this.has(id);
 
                 if (allSelected && !cSelected) {
                     allSelected = false;
@@ -274,96 +368,33 @@
     /**
      * Destroy instance.
      *
-     * @this
+     * @this TableSelect
      */
     TableSelect.prototype.destroy = function () {
         this.clear();
         this.refresh();
         this.$wrapper
-            .off('click.st.tableselect', this.options.clearSelector, $.proxy(onClearAllSelection, this))
-        ;
+            .off('click.st.tableselect', this.options.clearSelector, onClearAllSelection);
         this.$element
-            .off('change.st.tableselect', allSelector, $.proxy(onAllChanged, this))
-            .off('change.st.tableselect', rowSelector, $.proxy(onRowChanged, this))
-            .off('table-pager-refreshed.st.tableselect', $.proxy(onPagerRefreshed, this))
-            .$element.removeData('st.tableselect')
-        ;
+            .off('change.st.tableselect', this.options.allSelector, onAllChanged)
+            .off('change.st.tableselect', this.options.rowSelector, onRowChanged)
+            .off('table-pager-refreshed.st.tableselect', onPagerRefreshed)
+            .$element.removeData('st.tableselect');
     };
-
-    /**
-     * Action on all selector changed.
-     *
-     * @param jQuery.Event event
-     *
-     * @this
-     * @private
-     */
-    function onAllChanged (event) {
-        if ($(event.target).is(':checked')) {
-            this.all();
-
-        } else {
-            this.clean();
-        }
-    }
-
-    /**
-     * Action on clear all selection.
-     *
-     * @param jQuery.Event event
-     *
-     * @this
-     * @private
-     */
-    function onClearAllSelection (event) {
-        this.clear();
-    }
-
-    /**
-     * Action on row selector changed.
-     *
-     * @param jQuery.Event event
-     *
-     * @this
-     * @private
-     */
-    function onRowChanged (event) {
-        var $item = $(event.target);
-        var id = $item.parents('tr:first').attr('data-row-id');
-
-        if ($item.is(':checked')) {
-            this.add(id);
-
-        } else {
-            this.remove(id);
-        }
-    }
-
-    /**
-     * Action on pager loaded.
-     *
-     * @param jQuery.Event event
-     *
-     * @this
-     * @private
-     */
-    function onPagerRefreshed (event) {
-        this.refresh();
-    }
 
 
     // TABLE SELECT PLUGIN DEFINITION
     // ==============================
 
-    var old = $.fn.tableSelect;
+    old = $.fn.tableSelect;
 
-    $.fn.tableSelect = function (option, _relatedTarget) {
+    $.fn.tableSelect = function (option, value) {
         return this.each(function () {
-            var $this   = $(this);
-            var data    = $this.data('st.tableselect');
-            var options = typeof option == 'object' && option;
+            var $this   = $(this),
+                data    = $this.data('st.tableselect'),
+                options = typeof option === 'object' && option;
 
-            if (!data && option == 'destroy') {
+            if (!data && option === 'destroy') {
                 return;
             }
 
@@ -371,8 +402,8 @@
                 $this.data('st.tableselect', (data = new TableSelect(this, options)));
             }
 
-            if (typeof option == 'string') {
-                data[option]();
+            if (typeof option === 'string') {
+                data[option](value);
             }
         });
     };
@@ -400,4 +431,4 @@
         });
     });
 
-}(jQuery);
+}(jQuery));
