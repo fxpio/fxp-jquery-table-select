@@ -386,9 +386,7 @@
     // TABLE SELECT PLUGIN DEFINITION
     // ==============================
 
-    old = $.fn.tableSelect;
-
-    $.fn.tableSelect = function (option, value) {
+    function Plugin(option, value) {
         return this.each(function () {
             var $this   = $(this),
                 data    = $this.data('st.tableselect'),
@@ -406,8 +404,11 @@
                 data[option](value);
             }
         });
-    };
+    }
 
+    old = $.fn.tableSelect;
+
+    $.fn.tableSelect             = Plugin;
     $.fn.tableSelect.Constructor = TableSelect;
 
 
@@ -427,7 +428,7 @@
     $(window).on('load', function () {
         $('[data-table-select="true"]').each(function () {
             var $this = $(this);
-            $this.tableSelect($this.data());
+            Plugin.call($this, $this.data());
         });
     });
 
