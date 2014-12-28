@@ -397,7 +397,8 @@
             }
 
             if (!data) {
-                $this.data('st.tableselect', (data = new TableSelect(this, options)));
+                data = new TableSelect(this, options);
+                $this.data('st.tableselect', data);
             }
 
             if (typeof option === 'string') {
