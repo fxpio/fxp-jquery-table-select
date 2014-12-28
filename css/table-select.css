@@ -1,0 +1,14 @@
+[data-table-id] .table-select-count,
+[data-table-id] .table-select-clear {
+  padding: 4px 4px 3px 4px;
+  line-height: 20px;
+}
+[data-table-id] .table-select-count.disabled {
+  opacity: 1;
+}
+[data-table-id] .table-select-count:empty {
+  display: none;
+}
+[data-table-id] .table-select-count:empty + .table-select-clear {
+  display: none;
+}
