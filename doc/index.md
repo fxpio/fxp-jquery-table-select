@@ -21,7 +21,7 @@ Add library in your `bower.json`:
 ```json
 {
     "dependencies": {
-        "sonatra-jquery-table-select: "latest"
+        "sonatra-jquery-table-select": "latest"
     }
 }
 ```
