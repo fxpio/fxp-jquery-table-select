@@ -97,7 +97,7 @@
      */
     var TableSelect = function (element, options) {
         this.guid         = jQuery.guid;
-        this.options      = $.extend({}, TableSelect.DEFAULTS, options);
+        this.options      = $.extend(true, {}, TableSelect.DEFAULTS, options);
         this.$element     = $(element);
         this.$wrapper     = $('[data-table-id=' + this.$element.attr('id') + ']');
         this.$count       = $(this.options.countSelector, this.$wrapper);
