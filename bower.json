@@ -19,6 +19,7 @@
     "jquery": ">=1.11.0"
   },
   "devDependencies": {
+    "requirejs": "~2",
     "bootstrap": ">=3.0",
     "font-awesome": ">=4.2",
     "sonatra-jquery-table-pager": "latest"

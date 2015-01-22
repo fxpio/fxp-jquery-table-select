@@ -85,10 +85,20 @@
         </table>
     </div>
 </div>
-
-<script src="../bower_components/jquery/dist/jquery.js"></script>
-<script src="../bower_components/sonatra-jquery-table-pager/js/table-pager.js"></script>
-<script src="../bower_components/sonatra-jquery-table-pager/js/locale/table-pager-fr.js"></script>
-<script src="../js/table-select.js"></script>
+<script>
+    var require = {
+        paths: {
+            'jquery': '../bower_components/jquery/dist/jquery',
+            'sonatra-jquery-table-pager': '../bower_components/sonatra-jquery-table-pager/js/table-pager',
+            'sonatra-jquery-table-pager-locale': '../bower_components/sonatra-jquery-table-pager/js/locale',
+            'sonatra-jquery-table-select': '../js/table-select'
+        },
+        deps: ['sonatra-jquery-table-select', 'sonatra-jquery-table-pager-locale/table-pager-fr'],
+        callback: function () {
+            $(window).trigger('load');
+        }
+    };
+</script>
+<script src="../bower_components/requirejs/require.js" async="async"></script>
 </body>
 </html>
