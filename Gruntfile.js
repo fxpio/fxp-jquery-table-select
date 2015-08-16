@@ -65,6 +65,8 @@ module.exports = function (grunt) {
                     style: 'expanded'
                 },
                 files: {
+                    "css/table-pager.css": "bower_components/sonatra-jquery-table-pager/less/table-pager.less",
+                    "css/table-sort.css": "bower_components/sonatra-jquery-table-pager/less/table-sort.less",
                     "css/table-select.css": "less/table-select.less"
                 }
             }
