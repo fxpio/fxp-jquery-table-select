@@ -68,10 +68,16 @@ module.exports = function (grunt) {
                     "css/table-select.css": "less/table-select.less"
                 }
             }
+        },
+        nodemon: {
+            dev: {
+                script: 'examples/ajax.js'
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-nodemon');
 
     grunt.registerTask('serve', function () {
         grunt.task.run([
