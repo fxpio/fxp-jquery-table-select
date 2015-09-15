@@ -391,7 +391,7 @@
             .off('change.st.tableselect', this.options.allSelector, onAllChanged)
             .off('change.st.tableselect', this.options.rowSelector, onRowChanged)
             .off('table-pager-refreshed.st.tableselect', onPagerRefreshed)
-            .$element.removeData('st.tableselect');
+            .removeData('st.tableselect');
     };
 
 
