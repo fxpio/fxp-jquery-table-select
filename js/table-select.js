@@ -371,6 +371,9 @@
         if (this.count() >= 1) {
             this.$count.text(this.count() + ' ');
             this.$count.append(this.options.textSelection);
+            this.$count.removeClass('not-selection');
+        } else {
+            this.$count.addClass('not-selection');
         }
 
         this.$element.find(this.allSelector).prop('checked', allSelected);
