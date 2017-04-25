@@ -46,7 +46,7 @@ module.exports = function (grunt) {
                     server: {
                         baseDir: ['examples'],
                         routes: {
-                            "/bower_components": "bower_components",
+                            "/node_modules": "node_modules",
                             "/js": "js",
                             "/css": "css"
                         }
@@ -65,8 +65,8 @@ module.exports = function (grunt) {
                     style: 'expanded'
                 },
                 files: {
-                    "css/table-pager.css": "bower_components/sonatra-jquery-table-pager/less/table-pager.less",
-                    "css/table-sort.css": "bower_components/sonatra-jquery-table-pager/less/table-sort.less",
+                    "css/table-pager.css": "node_modules/@sonatra/jquery-table-pager/less/table-pager.less",
+                    "css/table-sort.css": "node_modules/@sonatra/jquery-table-pager/less/table-sort.less",
                     "css/table-select.css": "less/table-select.less"
                 }
             }
