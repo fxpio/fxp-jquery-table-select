@@ -401,8 +401,9 @@
     // TABLE SELECT PLUGIN DEFINITION
     // ==============================
 
-    function Plugin(option, value) {
-        var ret;
+    function Plugin(option) {
+        var args = Array.prototype.slice.call(arguments, 1),
+            ret;
 
         this.each(function () {
             var $this   = $(this),
@@ -419,7 +420,7 @@
             }
 
             if (typeof option === 'string') {
-                ret = data[option](value);
+                ret = data[option].apply(data, args);
             }
         });
 
