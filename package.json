@@ -37,6 +37,6 @@
     "requirejs": "^2.0.0",
     "bootstrap": "^3.3.0",
     "font-awesome": "^4.7.0",
-    "@sonatra/jquery-table-pager": "git+ssh://git@github.com/sonatra/sonatra-jquery-table-pager.git#master"
+    "@sonatra/jquery-table-pager": "git://github.com/sonatra/sonatra-jquery-table-pager.git#master"
   }
 }
