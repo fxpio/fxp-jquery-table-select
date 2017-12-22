@@ -119,7 +119,7 @@
         this.rowSelector  = this.options.rowSelector.replace('%COL_NAME%', this.options.colSelectable);
         this.setMaxSelection(this.options.maxSelection);
 
-        if (this.$element.find(this.allSelector).size() > 0) {
+        if (this.$element.find(this.allSelector).length > 0) {
             this.multiple = true;
         }
 
@@ -250,7 +250,7 @@
             id,
             i;
 
-        for (i = 0; i < $items.size(); i += 1) {
+        for (i = 0; i < $items.length; i += 1) {
             id = $items.eq(i).attr('data-row-id');
 
             if (undefined !== id) {
@@ -272,7 +272,7 @@
             id,
             i;
 
-        for (i = 0; i < $items.size(); i += 1) {
+        for (i = 0; i < $items.length; i += 1) {
             id = $items.eq(i).attr('data-row-id');
 
             if (undefined !== id) {
@@ -351,7 +351,7 @@
             cSelected,
             i;
 
-        for (i = 0; i < $items.size(); i += 1) {
+        for (i = 0; i < $items.length; i += 1) {
             id = $items.eq(i).attr('data-row-id');
 
             if (undefined !== id) {
