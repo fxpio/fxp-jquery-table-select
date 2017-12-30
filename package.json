@@ -1,8 +1,8 @@
 {
-  "name": "@sonatra/jquery-table-select",
+  "name": "@fxp/jquery-table-select",
   "version": "1.0.0",
   "license": "MIT",
-  "author": "François Pluchino <francois.pluchino@sonatra.com>",
+  "author": "François Pluchino <francois.pluchino@gmail.com>",
   "contributors": [],
   "description": "A select/multi-select for table",
   "keywords": [
@@ -12,13 +12,13 @@
     "ajax",
     "jquery"
   ],
-  "homepage": "https://github.com/sonatra/sonatra-jquery-table-select",
+  "homepage": "https://github.com/fxpio/fxp-jquery-table-select",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sonatra/sonatra-jquery-table-select.git"
+    "url": "https://github.com/fxpio/fxp-jquery-table-select.git"
   },
   "bugs": {
-    "url": "https://github.com/sonatra/sonatra-jquery-table-select/issues"
+    "url": "https://github.com/fxpio/fxp-jquery-table-select/issues"
   },
   "engines": {},
   "main": "js/table-select.js",
@@ -26,7 +26,7 @@
     "jquery": "^2.2.0||^3.2.0"
   },
   "devDependencies": {
-    "@sonatra/jquery-table-pager": "git://github.com/sonatra/sonatra-jquery-table-pager.git#master",
+    "@fxp/jquery-table-pager": "git://github.com/fxpio/fxp-jquery-table-pager.git#master",
     "bootstrap": "^3.3.7",
     "font-awesome": "^4.7.0",
     "grunt": "^1.0.1",

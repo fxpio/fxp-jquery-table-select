@@ -1,7 +1,7 @@
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -23,7 +23,7 @@
 
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define(['jquery', 'sonatra-jquery-table-pager'], factory);
+        define(['jquery', 'fxp-jquery-table-pager'], factory);
     } else {
         // Browser globals
         factory(jQuery);
@@ -124,12 +124,12 @@
         }
 
         this.$element
-            .on('change.st.tableselect', this.allSelector, this, onAllChanged)
-            .on('change.st.tableselect', this.rowSelector, this, onRowChanged)
-            .on('table-pager-refreshed.st.tableselect', null, this, onPagerRefreshed);
+            .on('change.fxp.tableselect', this.allSelector, this, onAllChanged)
+            .on('change.fxp.tableselect', this.rowSelector, this, onRowChanged)
+            .on('table-pager-refreshed.fxp.tableselect', null, this, onPagerRefreshed);
 
         this.$wrapper
-            .on('click.st.tableselect', this.options.clearSelector, this, onClearAllSelection);
+            .on('click.fxp.tableselect', this.options.clearSelector, this, onClearAllSelection);
 
         this.refresh();
     },
@@ -389,11 +389,11 @@
         this.clear();
         this.refresh();
         this.$wrapper
-            .off('click.st.tableselect', this.options.clearSelector, onClearAllSelection);
+            .off('click.fxp.tableselect', this.options.clearSelector, onClearAllSelection);
         this.$element
-            .off('change.st.tableselect', this.options.allSelector, onAllChanged)
-            .off('change.st.tableselect', this.options.rowSelector, onRowChanged)
-            .off('table-pager-refreshed.st.tableselect', onPagerRefreshed)
+            .off('change.fxp.tableselect', this.options.allSelector, onAllChanged)
+            .off('change.fxp.tableselect', this.options.rowSelector, onRowChanged)
+            .off('table-pager-refreshed.fxp.tableselect', onPagerRefreshed)
             .removeData('st.tableselect');
     };
 

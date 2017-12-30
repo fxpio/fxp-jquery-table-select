@@ -1,7 +1,7 @@
 /*
- * This file is part of the Sonatra package.
+ * This file is part of the Fxp package.
  *
- * (c) François Pluchino <francois.pluchino@sonatra.com>
+ * (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -65,8 +65,8 @@ module.exports = function (grunt) {
                     style: 'expanded'
                 },
                 files: {
-                    "css/table-pager.css": "node_modules/@sonatra/jquery-table-pager/less/table-pager.less",
-                    "css/table-sort.css": "node_modules/@sonatra/jquery-table-pager/less/table-sort.less",
+                    "css/table-pager.css": "node_modules/@fxp/jquery-table-pager/less/table-pager.less",
+                    "css/table-sort.css": "node_modules/@fxp/jquery-table-pager/less/table-sort.less",
                     "css/table-select.css": "less/table-select.less"
                 }
             }

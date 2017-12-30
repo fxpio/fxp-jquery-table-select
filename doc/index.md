@@ -9,13 +9,13 @@ This library require:
 - jquery
 - bootstrap (optional)
 - font-awesome (optional)
-- sonatra-jquery-table-pager (optional)
+- fxp-jquery-table-pager (optional)
 
 Installation
 ------------
 
 ```
-npm install @sonatra/jquery-table-select --save
+npm install @fxp/jquery-table-select --save
 ```
 
 Dev installation
