@@ -26,7 +26,7 @@
     "jquery": "^2.2.0||^3.2.0"
   },
   "devDependencies": {
-    "@fxp/jquery-table-pager": "git://github.com/fxpio/fxp-jquery-table-pager.git#master",
+    "@fxp/jquery-table-pager": "github:fxpio/fxp-jquery-table-pager#master",
     "bootstrap": "^3.3.7",
     "font-awesome": "^4.7.0",
     "grunt": "^1.0.1",
