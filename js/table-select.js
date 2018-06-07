@@ -24,7 +24,7 @@ export default class TableSelect extends BasePlugin
      * @param {object}      options The options
      */
     constructor(element, options = {}) {
-        super(element, $.extend(true, {}, TableSelect.defaultOptions, options));
+        super(element, options);
 
         this.$wrapper    = $('[data-table-id=' + this.$element.attr('id') + ']');
         this.$count      = $(this.options.countSelector, this.$wrapper);
