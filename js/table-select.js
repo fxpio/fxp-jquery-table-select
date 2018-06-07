@@ -7,116 +7,31 @@
  * file that was distributed with this source code.
  */
 
-/*global define*/
-/*global jQuery*/
-/*global window*/
-/*global TableSelect*/
+import pluginify from '@fxp/jquery-pluginify';
+import BasePlugin from '@fxp/jquery-pluginify/js/plugin';
+import $ from "jquery";
+import {onAllChanged, onClearAllSelection, onPagerRefreshed, onRowChanged} from "./utils/events";
 
 /**
- * @param {jQuery} $
- *
- * @typedef {object}      define.amd
- * @typedef {TableSelect} TableSelect
+ * Table Select class.
  */
-(function (factory) {
-    'use strict';
-
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery', '@fxp/jquery-table-pager'], factory);
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
-    'use strict';
-
+export default class TableSelect extends BasePlugin
+{
     /**
-     * Action on all selector changed.
+     * Constructor.
      *
-     * @param {jQuery.Event|Event} event
-     *
-     * @typedef {TableSelect} Event.data The table select instance
-     *
-     * @private
+     * @param {HTMLElement} element The DOM element
+     * @param {object}      options The options
      */
-    function onAllChanged(event) {
-        if ($(event.target).is(':checked')) {
-            event.data.all();
+    constructor(element, options = {}) {
+        super(element, $.extend(true, {}, TableSelect.defaultOptions, options));
 
-        } else {
-            event.data.clean();
-        }
-    }
-
-    /**
-     * Action on row selector changed.
-     *
-     * @param {jQuery.Event|Event} event
-     *
-     * @typedef {TableSelect} Event.data The table select instance
-     *
-     * @private
-     */
-    function onRowChanged(event) {
-        var $item = $(event.target),
-            id = $item.parents('tr:first').attr('data-row-id');
-
-        if ($item.is(':checked')) {
-            event.data.add(id);
-
-        } else {
-            event.data.remove(id);
-        }
-    }
-
-    /**
-     * Action on clear all selection.
-     *
-     * @param {jQuery.Event|Event} event
-     *
-     * @typedef {TableSelect} Event.data The table select instance
-     *
-     * @private
-     */
-    function onClearAllSelection(event) {
-        event.data.clear();
-    }
-
-    /**
-     * Action on pager loaded.
-     *
-     * @param {jQuery.Event|Event} event
-     *
-     * @typedef {TableSelect} Event.data The table select instance
-     *
-     * @private
-     */
-    function onPagerRefreshed(event) {
-        event.data.refresh();
-    }
-
-    // TABLE SELECT CLASS DEFINITION
-    // =============================
-
-    /**
-     * @constructor
-     *
-     * @param {string|elements|object|jQuery} element
-     * @param {object}                        options
-     *
-     * @this TableSelect
-     */
-    var TableSelect = function (element, options) {
-        this.guid         = jQuery.guid;
-        this.options      = $.extend(true, {}, TableSelect.DEFAULTS, options);
-        this.$element     = $(element);
-        this.$wrapper     = $('[data-table-id=' + this.$element.attr('id') + ']');
-        this.$count       = $(this.options.countSelector, this.$wrapper);
-        this.items        = [];
-        this.multiple     = false;
-        this.allSelector  = this.options.allSelector.replace('%COL_NAME%', this.options.colSelectable);
-        this.rowSelector  = this.options.rowSelector.replace('%COL_NAME%', this.options.colSelectable);
+        this.$wrapper    = $('[data-table-id=' + this.$element.attr('id') + ']');
+        this.$count      = $(this.options.countSelector, this.$wrapper);
+        this.items       = [];
+        this.multiple    = false;
+        this.allSelector = this.options.allSelector.replace('%COL_NAME%', this.options.colSelectable);
+        this.rowSelector = this.options.rowSelector.replace('%COL_NAME%', this.options.colSelectable);
         this.setMaxSelection(this.options.maxSelection);
 
         if (this.$element.find(this.allSelector).length > 0) {
@@ -132,23 +47,7 @@
             .on('click.fxp.tableselect', this.options.clearSelector, this, onClearAllSelection);
 
         this.refresh();
-    },
-        old;
-
-    /**
-     * Defaults options.
-     *
-     * @type {object}
-     */
-    TableSelect.DEFAULTS = {
-        colSelectable: 'table-selector',
-        allSelector:   'th[data-col-name=%COL_NAME%] input',
-        rowSelector:   'td[data-col-name=%COL_NAME%] input',
-        countSelector: '.table-select-count',
-        clearSelector: '.table-select-clear',
-        textSelection: '<i class="fa fa-check-circle"></i>',
-        maxSelection:  0
-    };
+    }
 
     /**
      * Check if item is selected.
@@ -156,22 +55,18 @@
      * @param {string} item The item id
      *
      * @returns {boolean}
-     *
-     * @this TableSelect
      */
-    TableSelect.prototype.has = function (item) {
+    has(item) {
         return $.inArray(item, this.items) >= 0;
-    };
+    }
 
     /**
      * Adds item.
      *
      * @param {string|Array} item The item id or the list of item id
-     *
-     * @this TableSelect
      */
-    TableSelect.prototype.add = function (item) {
-        var id,
+    add(item) {
+        let id,
             event,
             i;
 
@@ -203,17 +98,15 @@
         });
 
         this.refresh();
-    };
+    }
 
     /**
      * Removes item.
      *
      * @param {string|Array} item The item id or the list of item id
-     *
-     * @this TableSelect
      */
-    TableSelect.prototype.remove = function (item) {
-        var id,
+    remove(item) {
+        let id,
             pos,
             i;
 
@@ -237,15 +130,13 @@
         }
 
         this.refresh();
-    };
+    }
 
     /**
      * Adds all item ids in DOM table.
-     *
-     * @this TableSelect
      */
-    TableSelect.prototype.all = function () {
-        var $items = this.$element.find('> tbody > tr'),
+    all() {
+        let $items = this.$element.find('> tbody > tr'),
             ids = [],
             id,
             i;
@@ -259,15 +150,13 @@
         }
 
         this.add(ids);
-    };
+    }
 
     /**
      * Removes all item ids in DOM table.
-     *
-     * @this TableSelect
      */
-    TableSelect.prototype.clean = function () {
-        var $items = this.$element.find('> tbody > tr'),
+    clean() {
+        let $items = this.$element.find('> tbody > tr'),
             ids = [],
             id,
             i;
@@ -281,69 +170,57 @@
         }
 
         this.remove(ids);
-    };
+    }
 
     /**
      * Removes all items.
-     *
-     * @this TableSelect
      */
-    TableSelect.prototype.clear = function () {
+    clear() {
         this.items = [];
         this.refresh();
-    };
+    }
 
     /**
      * Get all item ids.
      *
      * @returns Array
-     *
-     * @this TableSelect
      */
-    TableSelect.prototype.getItems = function () {
+    getItems() {
         return this.items;
-    };
+    }
 
     /**
      * Counts items.
      *
      * @returns {number}
-     *
-     * @this TableSelect
      */
-    TableSelect.prototype.count = function () {
+    count() {
         return this.getItems().length;
-    };
+    }
 
     /**
      * Get max selection.
      *
      * @returns {number}
-     * 
-     * @this TableSelect
      */
-    TableSelect.prototype.getMaxSelection = function () {
+    getMaxSelection() {
         return this.maxSelection;
-    };
+    }
 
     /**
      * Set max selection.
      *
      * @param {number} max
-     *
-     * @this TableSelect
      */
-    TableSelect.prototype.setMaxSelection = function (max) {
+    setMaxSelection(max) {
         this.maxSelection = max;
-    };
+    }
 
     /**
      * Refresh DOM.
-     *
-     * @this TableSelect
      */
-    TableSelect.prototype.refresh = function () {
-        var event = $.Event('table-select-refreshed', {'tableSelect': this}),
+    refresh() {
+        let event = $.Event('table-select-refreshed', {'tableSelect': this}),
             $items = this.$element.find('> tbody > tr'),
             allSelected = true,
             id,
@@ -378,14 +255,12 @@
 
         this.$element.find(this.allSelector).prop('checked', allSelected);
         this.$element.trigger(event);
-    };
+    }
 
     /**
-     * Destroy instance.
-     *
-     * @this TableSelect
+     * Destroy the instance.
      */
-    TableSelect.prototype.destroy = function () {
+    destroy() {
         this.clear();
         this.refresh();
         this.$wrapper
@@ -393,64 +268,23 @@
         this.$element
             .off('change.fxp.tableselect', this.options.allSelector, onAllChanged)
             .off('change.fxp.tableselect', this.options.rowSelector, onRowChanged)
-            .off('table-pager-refreshed.fxp.tableselect', onPagerRefreshed)
-            .removeData('st.tableselect');
-    };
+            .off('table-pager-refreshed.fxp.tableselect', onPagerRefreshed);
 
-
-    // TABLE SELECT PLUGIN DEFINITION
-    // ==============================
-
-    function Plugin(option) {
-        var args = Array.prototype.slice.call(arguments, 1),
-            ret;
-
-        this.each(function () {
-            var $this   = $(this),
-                data    = $this.data('st.tableselect'),
-                options = typeof option === 'object' && option;
-
-            if (!data && option === 'destroy') {
-                return;
-            }
-
-            if (!data) {
-                data = new TableSelect(this, options);
-                $this.data('st.tableselect', data);
-            }
-
-            if (typeof option === 'string') {
-                ret = data[option].apply(data, args);
-            }
-        });
-
-        return undefined === ret ? this : ret;
+        super.destroy();
     }
+}
 
-    old = $.fn.tableSelect;
+/**
+ * Defaults options.
+ */
+TableSelect.defaultOptions = {
+    colSelectable: 'table-selector',
+    allSelector:   'th[data-col-name=%COL_NAME%] input',
+    rowSelector:   'td[data-col-name=%COL_NAME%] input',
+    countSelector: '.table-select-count',
+    clearSelector: '.table-select-clear',
+    textSelection: '<i class="fa fa-check-circle"></i>',
+    maxSelection:  0
+};
 
-    $.fn.tableSelect             = Plugin;
-    $.fn.tableSelect.Constructor = TableSelect;
-
-
-    // TABLE SELECT NO CONFLICT
-    // ========================
-
-    $.fn.tableSelect.noConflict = function () {
-        $.fn.tableSelect = old;
-
-        return this;
-    };
-
-
-    // TABLE SELECT DATA-API
-    // =====================
-
-    $(window).on('load', function () {
-        $('[data-table-select="true"]').each(function () {
-            var $this = $(this);
-            Plugin.call($this, $this.data());
-        });
-    });
-
-}));
+pluginify('tableSelect', 'fxp.tableselect', TableSelect, true, '[data-table-select="true"]');
