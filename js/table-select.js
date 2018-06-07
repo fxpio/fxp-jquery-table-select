@@ -23,7 +23,7 @@
 
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define(['jquery', 'fxp-jquery-table-pager'], factory);
+        define(['jquery', '@fxp/jquery-table-pager'], factory);
     } else {
         // Browser globals
         factory(jQuery);
