@@ -1,0 +1,16 @@
+[data-table-id] .table-select-count.fa-wrap,
+[data-table-id] .table-select-clear.fa {
+  padding: 6px 6px;
+  line-height: 20px;
+}
+[data-table-id] .table-select-count.disabled {
+  opacity: 1;
+}
+[data-table-id] .table-select-count:empty,
+[data-table-id] .table-select-count.not-selection {
+  display: none;
+}
+[data-table-id] .table-select-count:empty + .table-select-clear,
+[data-table-id] .table-select-count.not-selection + .table-select-clear {
+  display: none;
+}
