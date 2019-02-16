@@ -13,4 +13,4 @@ import '@fxp/jquery-table-pager/less/table-pager.less';
 import '@fxp/jquery-table-pager/less/table-sort.less';
 import '../less/table-select.less';
 import '../js/table-select';
-import '@fxp/jquery-table-pager/js/locale/table-pager-fr';
+import '@fxp/jquery-table-pager/js/locale/fr';
